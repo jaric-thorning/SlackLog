@@ -32,19 +32,29 @@ public class DBManager extends SQLiteOpenHelper {
 
         /* Create Workspaces Table */
         db.execSQL("CREATE TABLE " + WORKSPACES_TABLE_NAME + " (" + _ID
-                + " INTEGER PRIMAY KEY AUTO INCREMENT, " + WORKSPACES_NAME + " TEXT, "
+                + " INTEGER PRIMARY KEY AUTO INCREMENT, " + WORKSPACES_NAME + " TEXT NOT NULL, "
                 + WORKSPACES_KEY + " TEXT NOT NULL);");
 
-        /*TODO: Create Users Table*/
+
+        /* Create Users Table */
+        db.execSQL("CREATE TABLE " + USERS_TABLE_NAME
+                + " (" + _ID + " INTEGER PRIMARY KEY AUTO INCREMENT, "
+                + USERS_UID + " TEXT NOT NULL, "
+                + USERS_NAME + " TEXT NOT NULL"
+                + USERS_EMAIL + " TEXT NOT NULL"
+                + USERS_WORKSPACE + "TEXT NOT NULL");
+
+
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         /*Drop Workspaces Table */
-        db.execSQL("DROP TABLE IF EXISTS " + WORKSPACES_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + WORKSPACES_TABLE_NAME);
 
-        /*TODO: Drop User Table*/
+        /*Drop User Table*/
+        db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE_NAME);
 
         onCreate(db);
     }
