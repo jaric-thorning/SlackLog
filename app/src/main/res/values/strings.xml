@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">SLog</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="workspaceNameLabel">Enter Workspace Name:</string>
+    <string name="workspaceKeyLabel">Enter Workspace Key:</string>
+    <string name="workspaceKeyHint">Workspace Key</string>
+    <string name="workspaceNameHint">Workspace Name</string>
+    <string name="workspaceAddButton">Add Workspace</string>
+
+
+    <string name="viewKeyButtonLabel">Key</string>
+    <string name="viewUsersButtonLabel">Users</string>
+    <string name="viewRecentLoginsButtonLabel">Logins</string>
+
+
+    <string name="title_activity_add_workspace">Select Workspace</string>
+    <string name="title_activity_main_menu">Menu</string>
+    <string name="title_activity_display_users">Users</string>
+    <string name="title_activity_user">User</string>
+
+</resources>
