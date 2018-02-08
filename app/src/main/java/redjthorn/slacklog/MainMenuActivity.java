@@ -79,7 +79,6 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //WebHandler webHandler = new WebHandler();
-                //webHandler.execute("https://slack.com/api/team.accessLogs", "***REMOVED***");
 
                 WebHandler webHandler = new WebHandler(v.getContext());
                 webHandler.updateUsers(finalWorkspaceString);
@@ -92,35 +91,5 @@ public class MainMenuActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-
-    private void doRequest() {
-
-        RequestQueue MyRequestQueue = Volley.newRequestQueue(this);
-
-        Log.d(TAG, "Sending request.");
-        String url = "https://slack.com/api/team.list";
-        StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //This code is executed if there is an error.
-            }
-        }) {
-            protected Map<String, String> getParams() {
-                Map<String, String> MyData = new HashMap<String, String>();
-                MyData.put("token", "***REMOVED***");
-                return MyData;
-            }
-        };
-
-
-        MyRequestQueue.add(MyStringRequest);
-
     }
 }
