@@ -33,16 +33,23 @@ public class DBManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+            checktables(db);
+    }
 
-        Log.d(TAG, "Creating tables.");
+    public void checktables(SQLiteDatabase Adb){
+        SQLiteDatabase db = Adb;
+
+        if(db == null){
+            db = this.getWritableDatabase();
+        }
 
         /* Create Workspaces Table */
-        try {
-            Log.d(TAG, "Creating " + WORKSPACES_TABLE_NAME);
 
-            db.execSQL("CREATE TABLE " + WORKSPACES_TABLE_NAME
-                    + " ("
-                    + _ID + " INTEGER PRIMARY KEY AUTO INCREMENT, "
+        Log.d(TAG, "Checking " + WORKSPACES_TABLE_NAME);
+
+        try{
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + WORKSPACES_TABLE_NAME + " ("
+                    + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + WORKSPACES_NAME + " TEXT NOT NULL, "
                     + WORKSPACES_KEY + " TEXT NOT NULL);");
             Log.d(TAG, "Created " + WORKSPACES_TABLE_NAME);
@@ -54,12 +61,10 @@ public class DBManager extends SQLiteOpenHelper {
         /* Create Users Table */
 
         try {
-            Log.d(TAG, "Creating " + USERS_TABLE_NAME);
+            Log.d(TAG, "Checking " + USERS_TABLE_NAME);
 
-            db.execSQL("CREATE TABLE " + USERS_TABLE_NAME
-                    + " ("
-                    + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + USERS_UID + " TEXT NOT NULL, "
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + USERS_TABLE_NAME + " ("
+                    + USERS_UID + " TEXT NOT NULL PRIMARY KEY, "
                     + USERS_NAME + " TEXT NOT NULL, "
                     + USERS_REAL_NAME + " TEXT, "
                     + USERS_EMAIL + " TEXT NOT NULL, "
@@ -80,4 +85,6 @@ public class DBManager extends SQLiteOpenHelper {
 
         onCreate(db);
     }
+
+
 }

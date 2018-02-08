@@ -49,6 +49,7 @@ public class Workspaces extends AppCompatActivity {
 
         DBManager dbManager = new DBManager(this);
 
+
         workspacesListView = (ListView) findViewById(R.id.workspacesListView);
 
         // Defined Array values to show in ListView
@@ -58,6 +59,33 @@ public class Workspaces extends AppCompatActivity {
         //SQLiteDatabase db = DBManager.DBManager.getReadableDatabase();
 
         SQLiteDatabase db = dbManager.getReadableDatabase();
+
+        Cursor tables = db.rawQuery("SELECT * FROM sqlite_master;", null);
+
+        while(tables.moveToNext()){
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < tables.getColumnCount(); i++){
+                sb.append(tables.getString(i));
+                sb.append(" ");
+            }
+            Log.d(TAG, "Table found: " + sb.toString());
+
+        }
+
+        DBManager.DBManager.checktables(null);
+
+        tables = db.rawQuery("SELECT * FROM sqlite_master;", null);
+
+        while(tables.moveToNext()){
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < tables.getColumnCount(); i++){
+                sb.append(tables.getString(i));
+                sb.append(" ");
+            }
+            Log.d(TAG, "Table found: " + sb.toString());
+
+        }
+
 
         String[] FROM = { _ID, WORKSPACES_NAME, WORKSPACES_KEY, };
         String ORDER_BY = WORKSPACES_NAME + " DESC";

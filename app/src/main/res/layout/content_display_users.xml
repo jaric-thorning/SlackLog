@@ -11,13 +11,15 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="redjthorn.slacklog.DisplayUsersActivity"
     tools:showIn="@layout/activity_display_users"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <EditText
         android:id="@+id/searchEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search"/>
+        android:hint="Search"
+        />
 
     <ListView
         android:id="@+id/userList"
