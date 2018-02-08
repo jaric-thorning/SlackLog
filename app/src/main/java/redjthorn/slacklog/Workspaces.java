@@ -2,11 +2,13 @@ package redjthorn.slacklog;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,7 @@ import static redjthorn.slacklog.Constants.*;
 
 public class Workspaces extends AppCompatActivity {
 
+    private static final String TAG = "SlackLog:Workspaces";
     ListView workspacesListView;
     ArrayAdapter<String> adapter;
 
@@ -51,7 +54,11 @@ public class Workspaces extends AppCompatActivity {
         // Defined Array values to show in ListView
         List<String> values = new ArrayList<>();
 
-        SQLiteDatabase db = DBManager.DBManager.getReadableDatabase();
+
+        //SQLiteDatabase db = DBManager.DBManager.getReadableDatabase();
+
+        SQLiteDatabase db = dbManager.getReadableDatabase();
+
         String[] FROM = { _ID, WORKSPACES_NAME, WORKSPACES_KEY, };
         String ORDER_BY = WORKSPACES_NAME + " DESC";
 
@@ -114,8 +121,18 @@ public class Workspaces extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         } else if( id == R.id.action_ClearAllWorkplaces){
-            DBManager.DBManager.getWritableDatabase().delete(WORKSPACES_TABLE_NAME, null, null);
+            try {
+                DBManager.DBManager.getWritableDatabase().delete(WORKSPACES_TABLE_NAME, null, null);
+            } catch (SQLException e){
+                Log.d(TAG, e.toString());
+            }
             refresh();
+        } else if (id == R.id.action_ClearAllUsers){
+            try {
+                DBManager.DBManager.getWritableDatabase().delete(USERS_TABLE_NAME, null, null);
+            } catch (SQLException e){
+                Log.d(TAG, e.toString());
+            }
         }
 
         return super.onOptionsItemSelected(item);

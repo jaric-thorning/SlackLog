@@ -6,6 +6,10 @@ import android.provider.BaseColumns;
  * Created by jaricthorning on 29/1/18.
  */
 public interface Constants extends BaseColumns{
+
+    public  static final String DATABASE_NAME = "workspaces.db";
+
+
     public static final String WORKSPACES_TABLE_NAME = "workspaces";
     public static final String WORKSPACES_NAME = "name";
     public static final String WORKSPACES_KEY = "key";
@@ -16,6 +20,7 @@ public interface Constants extends BaseColumns{
     public static final String USERS_NAME = "name";
     public static final String USERS_EMAIL = "email";
     public static final String USERS_WORKSPACE = "workspace";
+    public static final String USERS_REAL_NAME = "realname";
 
 
 

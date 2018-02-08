@@ -10,7 +10,14 @@
     <item
         android:id="@+id/action_ClearAllWorkplaces"
         android:orderInCategory="99"
-        android:title="Remove All"
+        android:title="Purge Workplaces"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_ClearAllUsers"
+        android:orderInCategory="98"
+        android:title="Purge Users"
+        app:showAsAction="never" />
+
 
 </menu>
