@@ -73,6 +73,29 @@ public class DBManager extends SQLiteOpenHelper {
         } catch (Exception e){
             Log.d(TAG, e.toString());
         }
+
+
+        try{
+            Log.d(TAG, "Checking " + LOG_TABLE_NAME);
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + LOG_TABLE_NAME + " ("
+                    + LOG_ID + " INTEGER NOT NULL PRIMARY KEY, "
+                    + LOG_UID + " TEXT NOT NULL, "
+                    + LOG_USERNAME + " TEXT NOT NULL, "
+                    + LOG_DATE_FIRST + " TEXT NOT NULL, "
+                    + LOG_DATE_LAST + " TEXT NOT NULL, "
+                    + LOG_COUNT + " TEXT, "
+                    + LOG_IP + " TEXT, "
+                    + LOG_UAGENT + " TEXT, "
+                    + LOG_COUNTRY + " TEXT, "
+                    + LOG_REGION + " TEXT);");
+
+        } catch (SQLException e){
+            Log.d(TAG, e.toString());
+        }
+
+
+
     }
 
     @Override
@@ -82,6 +105,9 @@ public class DBManager extends SQLiteOpenHelper {
 
         /*Drop User Table*/
         db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE_NAME);
+
+         /*Drop User Table*/
+        db.execSQL("DROP TABLE IF EXISTS " + LOG_TABLE_NAME);
 
         onCreate(db);
     }
