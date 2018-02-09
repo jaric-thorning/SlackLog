@@ -82,8 +82,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
                 WebHandler webHandler = new WebHandler(v.getContext());
                 webHandler.updateUsers(finalWorkspaceString);
+                webHandler.updateLogs(finalWorkspaceString);
             }
         });
+
+
     }
 
 

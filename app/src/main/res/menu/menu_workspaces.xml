@@ -14,9 +14,9 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_ClearAllUsers"
+        android:id="@+id/action_ForceRebuild"
         android:orderInCategory="98"
-        android:title="Purge Users"
+        android:title="Force Rebuild"
         app:showAsAction="never" />
 
 

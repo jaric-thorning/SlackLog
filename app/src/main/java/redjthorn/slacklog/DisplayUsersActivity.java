@@ -56,7 +56,11 @@ public class DisplayUsersActivity extends AppCompatActivity {
 
         startManagingCursor(cursor);
 
+        final List<String> uids = new ArrayList<>();
+
         while(cursor.moveToNext()){
+            String uid = cursor.getString(0);
+            uids.add(uid);
             String name = cursor.getString(1);
             String realname = cursor.getString(2);
             if(realname != null && !realname.isEmpty()){
@@ -90,7 +94,8 @@ public class DisplayUsersActivity extends AppCompatActivity {
 
                 //TODO: get UserId and pass through
                 //FILL:
-                i.putExtra("userId", itemValue);
+                i.putExtra("userName", itemValue);
+                i.putExtra("userId", uids.get(position));
 
                 startActivity(i);
             }

@@ -31,6 +31,7 @@ public interface Constants extends BaseColumns{
     public static final String LOG_COUNT = "count";
     public static final String LOG_IP = "ip";
     public static final String LOG_UAGENT = "useragent";
+    public static final String LOG_ISP = "isp";
     public static final String LOG_COUNTRY = "country";
     public static final String LOG_REGION = "region";
 

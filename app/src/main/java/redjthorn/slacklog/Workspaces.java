@@ -155,12 +155,8 @@ public class Workspaces extends AppCompatActivity {
                 Log.d(TAG, e.toString());
             }
             refresh();
-        } else if (id == R.id.action_ClearAllUsers){
-            try {
-                DBManager.DBManager.getWritableDatabase().delete(USERS_TABLE_NAME, null, null);
-            } catch (SQLException e){
-                Log.d(TAG, e.toString());
-            }
+        } else if (id == R.id.action_ForceRebuild){
+            DBManager.DBManager.forceRebuild(null);
         }
 
         return super.onOptionsItemSelected(item);

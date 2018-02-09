@@ -87,6 +87,7 @@ public class DBManager extends SQLiteOpenHelper {
                     + LOG_COUNT + " TEXT, "
                     + LOG_IP + " TEXT, "
                     + LOG_UAGENT + " TEXT, "
+                    + LOG_ISP + " TEXT, "
                     + LOG_COUNTRY + " TEXT, "
                     + LOG_REGION + " TEXT);");
 
@@ -100,6 +101,27 @@ public class DBManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        /*Drop Workspaces Table */
+        db.execSQL("DROP TABLE IF EXISTS " + WORKSPACES_TABLE_NAME);
+
+        /*Drop User Table*/
+        db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE_NAME);
+
+         /*Drop User Table*/
+        db.execSQL("DROP TABLE IF EXISTS " + LOG_TABLE_NAME);
+
+        onCreate(db);
+    }
+
+
+    public void forceRebuild(SQLiteDatabase Adb){
+
+        SQLiteDatabase db = Adb;
+
+        if(db == null){
+            db = this.getWritableDatabase();
+        }
+
         /*Drop Workspaces Table */
         db.execSQL("DROP TABLE IF EXISTS " + WORKSPACES_TABLE_NAME);
 

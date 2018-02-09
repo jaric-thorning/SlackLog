@@ -1,23 +1,25 @@
 package redjthorn.slacklog;
 
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
-import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
 import com.jjoe64.graphview.series.Series;
 
@@ -27,9 +29,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import static redjthorn.slacklog.Constants.LOG_DATE_LAST;
+import static redjthorn.slacklog.Constants.LOG_ID;
+import static redjthorn.slacklog.Constants.LOG_TABLE_NAME;
+import static redjthorn.slacklog.Constants.LOG_UID;
+
 public class UserActivity extends AppCompatActivity {
 
+    private static final String TAG = "SlackLog:UserActivity";
+
     private final UserActivity thisActivity = this;
+
+    String userName;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +57,21 @@ public class UserActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
         TextView userNameText = (TextView) findViewById(R.id.userName);
+        TextView userIdText = (TextView) findViewById(R.id.userID);
 
-        String userId;
+
 
         if(extras == null){
             userNameText.setText("No User");
+            userId = "";
         } else {
+            userName = extras.getString("userName");
             userId = extras.getString("userId");
 
             //TODO: Get user information and fill.
             //FILL:
-            userNameText.setText(userId);
+            userNameText.setText(userName);
+            userIdText.setText(userId);
         }
 
 
@@ -144,6 +160,62 @@ public class UserActivity extends AppCompatActivity {
             public void onTap(Series series, DataPointInterface dataPoint) {
                 Toast.makeText(thisActivity, "Series1: On Data Point clicked: " + dataPoint, Toast.LENGTH_SHORT).show();
             }
+        });
+
+
+
+        /* - Populate Log List View - */
+        final ListView userList = (ListView) findViewById(R.id.logList);
+
+        // Default
+
+        List<String> values = new ArrayList<>();
+
+        String[] FROM = {LOG_ID, LOG_DATE_LAST, LOG_UID};
+        String ORDER_BY = LOG_DATE_LAST;
+        String WHERE = LOG_UID + " = ?";
+        String WHEREARGS[] = {userId};
+
+
+        try {
+            SQLiteDatabase db = DBManager.DBManager.getReadableDatabase();
+
+            Cursor cursor = db.query(LOG_TABLE_NAME, FROM, WHERE, WHEREARGS, null, null, ORDER_BY);
+
+            startManagingCursor(cursor);
+
+            while(cursor.moveToNext()){
+                int log_id = cursor.getInt(0);
+                String log_date_last = cursor.getString(1);
+                values.add(log_date_last);
+                Log.d(TAG, "Found log: " + log_date_last);
+            }
+
+        } catch (SQLException e){
+            Log.d(TAG, e.toString());
+        } catch (Exception e){
+            Log.d(TAG, e.toString());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+
+        userList.setAdapter(adapter);
+
+        // ListView Item Click Listener
+        userList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                // ListView Clicked item index
+                int itemPosition = position;
+
+                // ListView Clicked item value
+                String itemValue = (String) userList.getItemAtPosition(position);
+            }
+
         });
 
 

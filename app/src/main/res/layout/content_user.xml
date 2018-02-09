@@ -20,6 +20,11 @@
         />
 
     <TextView
+        android:id="@+id/userID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Last Logins"/>
@@ -28,6 +33,12 @@
         android:layout_width="match_parent"
         android:layout_height="300dip"
         android:id="@+id/graph" />
+
+    <ListView
+        android:id="@+id/logList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </ListView>
 
 
 </LinearLayout>
