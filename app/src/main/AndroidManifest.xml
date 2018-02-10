@@ -32,10 +32,14 @@
             android:name=".DisplayUsersActivity"
             android:label="@string/title_activity_display_users"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".UserActivity"
             android:label="@string/title_activity_user"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DisplayLogsActivity"
+            android:label="@string/title_activity_display_logs"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

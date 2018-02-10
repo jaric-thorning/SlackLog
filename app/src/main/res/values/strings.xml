@@ -18,5 +18,6 @@
     <string name="title_activity_main_menu">Menu</string>
     <string name="title_activity_display_users">Users</string>
     <string name="title_activity_user">User</string>
+    <string name="title_activity_display_logs">Recent Logins</string>
 
 </resources>

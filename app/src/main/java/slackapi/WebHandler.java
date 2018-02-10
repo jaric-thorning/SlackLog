@@ -51,7 +51,7 @@ public class WebHandler {
 
 
 
-    public void updateLogs(String workspace) {
+    public void updateLogs(String workspace, final int page, final VolleyCallback volleyCallback) {
 
 
         final String final_workspace = workspace;
@@ -170,6 +170,8 @@ public class WebHandler {
 
                 Log.d(TAG, "Using key: " + key);
                 MyData.put("token", key);
+                MyData.put("count", "1000"); //1000 results per page, usually get latest logins
+                MyData.put("page", String.valueOf(page));
 
 
                 return MyData;
@@ -299,6 +301,10 @@ public class WebHandler {
 
 
         MyRequestQueue.add(MyStringRequest);
+    }
+
+    public interface VolleyCallback {
+        void onSuccess(String result);
     }
 
 

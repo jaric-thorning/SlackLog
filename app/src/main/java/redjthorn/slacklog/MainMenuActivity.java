@@ -82,10 +82,26 @@ public class MainMenuActivity extends AppCompatActivity {
 
                 WebHandler webHandler = new WebHandler(v.getContext());
                 webHandler.updateUsers(finalWorkspaceString);
-                webHandler.updateLogs(finalWorkspaceString);
+                webHandler.updateLogs(finalWorkspaceString, 1, new WebHandler.VolleyCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        //TODO: Generalise method and do processing here
+                    }
+                });
             }
         });
 
+        Button logsButton = (Button) findViewById(R.id.recentLoginsButton);
+
+        logsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(v.getContext(), DisplayLogsActivity.class);
+                i.putExtra("worksapceId", finalWorkspaceString);
+                startActivity(i);
+                return;
+            }
+        });
 
     }
 
