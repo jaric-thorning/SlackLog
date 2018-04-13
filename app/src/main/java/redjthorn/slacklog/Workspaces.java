@@ -1,11 +1,14 @@
 package redjthorn.slacklog;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -115,10 +118,6 @@ public class Workspaces extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                // ListView Clicked item index
-                int itemPosition = position;
-
-
                 // ListView Clicked item value
                 String itemValue = (String) workspacesListView.getItemAtPosition(position);
 
@@ -127,6 +126,41 @@ public class Workspaces extends AppCompatActivity {
                 i.putExtra("selectedWorkspace", itemValue);
 
                 startActivityForResult(i, 0);
+            }
+
+        });
+
+        workspacesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                final String workspaceName = workspacesListView.getItemAtPosition(i).toString();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setMessage("Do you want to delete " + workspaceName + "?")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //DELETE WORKSPACE OR ASK IF SURE (CONSENT IS LIKE TEA)
+
+                                Log.d(TAG, "Deleting " + workspaceName);
+                                SQLiteDatabase db = DBManager.DBManager.getWritableDatabase();
+                                db.delete(WORKSPACES_TABLE_NAME, WORKSPACES_NAME + " = ?"
+                                        , new String[]{workspaceName});
+
+
+                                refresh();
+                            }
+                        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return true;
             }
 
         });
@@ -146,7 +180,13 @@ public class Workspaces extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.new_workspace){
+            Context context = getApplicationContext();
+
+            Intent i = new Intent(context, AddWorkspace.class);
+            startActivityForResult(i, 0);
+        }
+        else if (id == R.id.action_settings) {
             return true;
         } else if( id == R.id.action_ClearAllWorkplaces){
             try {

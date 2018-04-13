@@ -3,13 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="redjthorn.slacklog.Workspaces">
     <item
+        android:id="@+id/new_workspace"
+        android:orderInCategory="1"
+        android:title="Add Workspace"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="2"
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_ClearAllWorkplaces"
-        android:orderInCategory="99"
+        android:orderInCategory="3"
         android:title="Purge Workplaces"
         app:showAsAction="never" />
 
@@ -19,5 +24,7 @@
         android:title="Force Rebuild"
         app:showAsAction="never" />
 
+
+    <!--TODO: ADD REMOVE WORKSPACES -->
 
 </menu>
