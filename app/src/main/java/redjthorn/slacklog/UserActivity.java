@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.TimeZone;
@@ -82,7 +83,74 @@ public class UserActivity extends AppCompatActivity {
         }
 
 
-        //TODO: Fill with user login logs
+         /* - Populate Log List View - */
+        final ListView userList = (ListView) findViewById(R.id.logList);
+
+        // Default
+
+        List<String> values = new ArrayList<>();
+
+
+        String ORDER_BY = LOG_DATE_LAST + " DESC";
+        String WHERE = LOG_UID + " = ?";
+        String WHEREARGS[] = {userId};
+        String GROUP_BY = "strftime('%d-%m-%Y'," + LOG_DATE_LAST + "/1,'unixepoch')";
+        String[] FROM = {LOG_ID, GROUP_BY, LOG_UID, "count("+GROUP_BY +")" };
+        try {
+            SQLiteDatabase db = DBManager.DBManager.getReadableDatabase();
+
+            Cursor cursor = db.query(LOG_TABLE_NAME, FROM, WHERE, WHEREARGS, GROUP_BY, null, ORDER_BY);
+
+            startManagingCursor(cursor);
+
+            //Calculate counts per day
+            while(cursor.moveToNext()){
+                int log_id = cursor.getInt(0);
+                String log_date_last = cursor.getString(1);
+
+                Log.d(TAG, "RAW: " + log_date_last);
+
+                /*// convert seconds to milliseconds
+                Date date = new Date(Integer.valueOf(log_date_last));
+                // the format of your date
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                // give a timezone reference for formatting (see comment at the bottom)
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT-0"));
+                String formattedDate = sdf.format(date);*/
+
+                values.add(log_date_last);
+                Log.d(TAG, "Found log: " + log_date_last + " (" + cursor.getString(3) +")");
+            }
+
+        } catch (SQLException e){
+            Log.d(TAG, e.toString());
+        } catch (Exception e){
+            Log.d(TAG, e.toString());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+
+        userList.setAdapter(adapter);
+
+        // ListView Item Click Listener
+        userList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                // ListView Clicked item index
+                int itemPosition = position;
+
+                // ListView Clicked item value
+                String itemValue = (String) userList.getItemAtPosition(position);
+            }
+
+        });
+
+
+
         GraphView graph = (GraphView) findViewById(R.id.graph);
 
         // generate Dates
@@ -167,73 +235,6 @@ public class UserActivity extends AppCompatActivity {
             public void onTap(Series series, DataPointInterface dataPoint) {
                 Toast.makeText(thisActivity, "Series1: On Data Point clicked: " + dataPoint, Toast.LENGTH_SHORT).show();
             }
-        });
-
-
-
-        /* - Populate Log List View - */
-        final ListView userList = (ListView) findViewById(R.id.logList);
-
-        // Default
-
-        List<String> values = new ArrayList<>();
-
-        String[] FROM = {LOG_ID, LOG_DATE_LAST, LOG_UID};
-        String ORDER_BY = LOG_DATE_LAST + " DESC";
-        String WHERE = LOG_UID + " = ?";
-        String WHEREARGS[] = {userId};
-
-
-        try {
-            SQLiteDatabase db = DBManager.DBManager.getReadableDatabase();
-
-            Cursor cursor = db.query(LOG_TABLE_NAME, FROM, WHERE, WHEREARGS, null, null, ORDER_BY);
-
-            startManagingCursor(cursor);
-
-            while(cursor.moveToNext()){
-                int log_id = cursor.getInt(0);
-                String log_date_last = cursor.getString(1);
-
-                // convert seconds to milliseconds
-                Date date = new Date(Integer.valueOf(log_date_last)*1000L);
-                // the format of your date
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                // give a timezone reference for formatting (see comment at the bottom)
-                sdf.setTimeZone(TimeZone.getTimeZone("GMT-0"));
-                String formattedDate = sdf.format(date);
-
-
-
-                values.add(formattedDate);
-                Log.d(TAG, "Found log: " + log_date_last);
-            }
-
-        } catch (SQLException e){
-            Log.d(TAG, e.toString());
-        } catch (Exception e){
-            Log.d(TAG, e.toString());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, values);
-
-        userList.setAdapter(adapter);
-
-        // ListView Item Click Listener
-        userList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                // ListView Clicked item index
-                int itemPosition = position;
-
-                // ListView Clicked item value
-                String itemValue = (String) userList.getItemAtPosition(position);
-            }
-
         });
 
 
