@@ -23,16 +23,23 @@ import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
 import com.jjoe64.graphview.series.Series;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.TimeZone;
 
+import static redjthorn.slacklog.Constants.LOG_COUNT;
 import static redjthorn.slacklog.Constants.LOG_DATE_LAST;
 import static redjthorn.slacklog.Constants.LOG_ID;
 import static redjthorn.slacklog.Constants.LOG_TABLE_NAME;
 import static redjthorn.slacklog.Constants.LOG_UID;
+import static redjthorn.slacklog.Constants.USERS_NAME;
+import static redjthorn.slacklog.Constants.USERS_REAL_NAME;
+import static redjthorn.slacklog.Constants.USERS_TABLE_NAME;
+import static redjthorn.slacklog.Constants.USERS_UID;
 
 public class UserActivity extends AppCompatActivity {
 
@@ -172,7 +179,7 @@ public class UserActivity extends AppCompatActivity {
         List<String> values = new ArrayList<>();
 
         String[] FROM = {LOG_ID, LOG_DATE_LAST, LOG_UID};
-        String ORDER_BY = LOG_DATE_LAST;
+        String ORDER_BY = LOG_DATE_LAST + " DESC";
         String WHERE = LOG_UID + " = ?";
         String WHEREARGS[] = {userId};
 
@@ -187,7 +194,18 @@ public class UserActivity extends AppCompatActivity {
             while(cursor.moveToNext()){
                 int log_id = cursor.getInt(0);
                 String log_date_last = cursor.getString(1);
-                values.add(log_date_last);
+
+                // convert seconds to milliseconds
+                Date date = new Date(Integer.valueOf(log_date_last)*1000L);
+                // the format of your date
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                // give a timezone reference for formatting (see comment at the bottom)
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT-0"));
+                String formattedDate = sdf.format(date);
+
+
+
+                values.add(formattedDate);
                 Log.d(TAG, "Found log: " + log_date_last);
             }
 

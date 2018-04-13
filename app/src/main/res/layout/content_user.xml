@@ -17,6 +17,7 @@
         android:id="@+id/userName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="20sp"
         />
 
     <TextView
@@ -25,20 +26,28 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:layout_marginTop="15px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Last Logins"/>
+        android:text="Login Graph"/>
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
         android:layout_height="300dip"
         android:id="@+id/graph" />
 
+    <TextView
+        android:layout_marginTop="15px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Last Logins: "/>
+
     <ListView
         android:id="@+id/logList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>
+
 
 
 </LinearLayout>
