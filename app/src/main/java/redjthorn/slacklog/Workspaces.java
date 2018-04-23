@@ -38,15 +38,9 @@ public class Workspaces extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        toolbar.setLogo(R.mipmap.ic_launcher);
+        getSupportActionBar().setTitle(null);
 
-                Intent i = new Intent(view.getContext(), AddWorkspace.class);
-                startActivityForResult(i, 0);
-            }
-        });
 
         /* Start DB Manager */
 
