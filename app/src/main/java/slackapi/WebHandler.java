@@ -48,8 +48,9 @@ public class WebHandler {
         MyRequestQueue = Volley.newRequestQueue(c);
     }
 
-
-
+    public RequestQueue getMyRequestQueue() {
+        return MyRequestQueue;
+    }
 
     public void updateLogs(String workspace, final int page, final VolleyCallback volleyCallback) {
 
