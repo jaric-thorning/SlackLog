@@ -1,4 +1,5 @@
-# slog
+![Slog Icon](https://github.com/jaric-thorning/slog/blob/master/web_hi_res_512.png)
+
 ## Slack Logging
 A simple android application for viewing user and log data of a Slack Workspaces
 
