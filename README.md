@@ -9,7 +9,7 @@ Slog is a simple android application designed to aid in Slack user management an
 
 Using the Slack API, slog fetches and displays user login logs. 
 
-<img src="https://github.com/jaric-thorning/slog/blob/master/graphexample.png" width="400" align=left> 
+<img src="https://github.com/jaric-thorning/slog/blob/master/graphexample.png" width="400">
 
 ## Status
 Developmental
