@@ -111,7 +111,7 @@ public class WebHandler {
 
                             db.insertOrThrow(LOG_TABLE_NAME, null, values);
 
-                            Log.d(TAG, "Found: " + "log-" + String.valueOf(id));
+                            Log.d(TAG, "Found: " + "log - " + String.valueOf(id));
 
                         } catch (JSONException e) {
                             Log.d(TAG, e.toString());
@@ -119,6 +119,7 @@ public class WebHandler {
                             if(e instanceof SQLiteConstraintException){
                                 //Likely primary key exeption, no worries
                                 //TODO: Fix this hack
+                                Log.d(TAG + ":e", "SQLiteConstraintException - " + e.toString());
                             }
                             else {
                                 Log.d(TAG, "Failed to insert into database.");
