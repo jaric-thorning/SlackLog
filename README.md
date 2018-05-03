@@ -15,9 +15,9 @@ Using the Slack API, slog fetches and displays user login logs.
 Developmental
 
 ## Setup
-Build APK, Launch
-Add new workspace -> Assign name and enter Slack API Key
-Select workplace and hit update
+- Build APK, Launch
+- Add new workspace -> Assign name and enter Slack API Key
+- Select workplace and hit update
 
 ## Requirements
 ### Android
