@@ -145,6 +145,17 @@ public class MainMenuActivity extends AppCompatActivity {
 
         graph = (GraphView) findViewById(R.id.all_user_graph);
         updateGraph();
+
+
+        graph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(view.getContext(), DisplayLogsActivity.class);
+                i.putExtra("worksapceId", finalWorkspaceString);
+                startActivity(i);
+                return;
+            }
+        });
     }
 
 
