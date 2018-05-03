@@ -1,4 +1,8 @@
-# Slack User Management and Team Monitoring <img src="https://github.com/jaric-thorning/slog/blob/master/web_hi_res_512.png" width="62" align=left> 
+
+# Slack Logging <img src="https://github.com/jaric-thorning/slog/blob/master/web_hi_res_512.png" width="62" align=left> 
+
+
+User Management and Workspace Monitoring for Slack
 
 ## About
 Slog is a simple android application designed to aid in Slack user management and team monitoring. 
@@ -6,9 +10,6 @@ Slog is a simple android application designed to aid in Slack user management an
 Using the Slack API, slog fetches and displays user login logs. 
 
 <img src="https://github.com/jaric-thorning/slog/blob/master/graphexample.png" width="400" align=left> 
-
-## Slack Logging
-A simple android application for viewing user and log data of a Slack Workspaces
 
 ## Status
 Developmental
