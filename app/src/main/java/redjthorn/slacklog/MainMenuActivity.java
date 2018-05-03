@@ -48,6 +48,15 @@ import static redjthorn.slacklog.Constants.LOG_ID;
 import static redjthorn.slacklog.Constants.LOG_TABLE_NAME;
 import static redjthorn.slacklog.Constants.LOG_UID;
 
+
+/**
+ * Activity
+ * Displays main menu for selected team
+ *
+ * Contains:
+ * Login graph
+ * Navigation buttons
+ */
 public class MainMenuActivity extends AppCompatActivity {
 
     GraphView graph;
@@ -118,13 +127,9 @@ public class MainMenuActivity extends AppCompatActivity {
                 });
 
 
+                /* Fetches pages 0 - 100 */
                 for(int i = 0; i <= 100; i++) {
-                    webHandler.updateLogs(finalWorkspaceString, i, new WebHandler.VolleyCallback() {
-                        @Override
-                        public void onSuccess(String result) {
-                            //TODO: Generalise method and do processing here
-                        }
-                    });
+                    webHandler.updateLogs(finalWorkspaceString, i);
                 }
 
 
@@ -166,6 +171,9 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Updates login graph
+     */
     private void updateGraph() {
 
         if (graph == null) {

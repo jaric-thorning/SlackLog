@@ -37,6 +37,8 @@ import redjthorn.slacklog.DBManager;
 
 /**
  * Created by jaricthorning on 29/1/18.
+ *
+ * Basic Web handler for interacting with the Slack API
  */
 public class WebHandler {
 
@@ -44,15 +46,29 @@ public class WebHandler {
 
     RequestQueue MyRequestQueue;
 
+    /**
+     * Constuctor
+     * @param c
+     */
     public WebHandler(Context c) {
         MyRequestQueue = Volley.newRequestQueue(c);
     }
 
+    /**
+     *
+     * @return request queue for polling / setting up listners
+     */
     public RequestQueue getMyRequestQueue() {
         return MyRequestQueue;
     }
 
-    public void updateLogs(String workspace, final int page, final VolleyCallback volleyCallback) {
+    /**
+     * Fetches requested page of users and adds to DB
+     *
+     * @param workspace
+     * @param page
+     */
+    public void updateLogs(String workspace, final int page) {
 
 
         final String final_workspace = workspace;
@@ -185,7 +201,10 @@ public class WebHandler {
     }
 
 
-
+    /**
+     * Fetches all users and adds to DB
+     * @param workspace
+     */
     public void updateUsers(String workspace) {
 
 
