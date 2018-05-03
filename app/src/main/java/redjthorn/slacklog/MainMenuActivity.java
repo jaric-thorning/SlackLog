@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,9 +24,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.PointsGraphSeries;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +49,8 @@ import static redjthorn.slacklog.Constants.LOG_TABLE_NAME;
 import static redjthorn.slacklog.Constants.LOG_UID;
 
 public class MainMenuActivity extends AppCompatActivity {
+
+    GraphView graph;
 
     private static final String TAG = "SlackLog:MainMenu";
     @Override
@@ -106,14 +112,13 @@ public class MainMenuActivity extends AppCompatActivity {
                 webHandler.getMyRequestQueue().addRequestFinishedListener(new RequestQueue.RequestFinishedListener<Object>() {
                     @Override
                     public void onRequestFinished(Request<Object> request) {
-                        Intent refresh = new Intent(v.getContext(), MainMenuActivity.class);
-                        refresh.putExtra("selectedWorkspace", finalSelectedWorkspace);
-                        startActivity(refresh);
+                        graph = (GraphView) findViewById(R.id.all_user_graph);
+                        updateGraph();
                     }
                 });
 
 
-                for(int i = 0; i <= 20; i++) {
+                for(int i = 0; i <= 100; i++) {
                     webHandler.updateLogs(finalWorkspaceString, i, new WebHandler.VolleyCallback() {
                         @Override
                         public void onSuccess(String result) {
@@ -138,7 +143,34 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         });
 
-        GraphView graph = (GraphView) findViewById(R.id.all_user_graph);
+        graph = (GraphView) findViewById(R.id.all_user_graph);
+        updateGraph();
+
+
+        graph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(view.getContext(), DisplayLogsActivity.class);
+                i.putExtra("worksapceId", finalWorkspaceString);
+                startActivity(i);
+                return;
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+
+    private void updateGraph() {
+
+        if (graph == null) {
+            return;
+        }
 
         try {
             String ORDER_BY = LOG_DATE_LAST + " DESC";
@@ -161,7 +193,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
             Calendar c = new GregorianCalendar();
             //Calculate counts per day
-            while(cursor.moveToNext()){
+            while (cursor.moveToNext()) {
 
 
                 int log_id = cursor.getInt(0);
@@ -169,7 +201,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
                 Log.d(TAG, "RAW: " + log_date_last);
 
-                Date date = new Date(Integer.valueOf(log_date_last)*1000L);
+                Date date = new Date(Integer.valueOf(log_date_last) * 1000L);
 
                 c.setTime(date);
                 c.set(Calendar.HOUR, 0);
@@ -178,7 +210,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
                 Date dateKey = c.getTime();
 
-                if(dateLogins.containsKey(dateKey)){
+                if (dateLogins.containsKey(dateKey)) {
                     dateLogins.put(dateKey, dateLogins.get(dateKey) + 1);
                     Log.d(TAG, "Added new date " + dateKey.toString());
 
@@ -194,51 +226,75 @@ public class MainMenuActivity extends AppCompatActivity {
             List<DataPoint> dataPoints = new ArrayList<>();
 
 
+
+            Calendar cutoff = new GregorianCalendar();
+
+            cutoff.setTime(Calendar.getInstance().getTime());
+            cutoff.add(Calendar.YEAR, -1);
+
             Date start = Calendar.getInstance().getTime();
             Date end = new Date(0);
 
             int maxValue = 0;
 
             int count = 0;
+
+            long DAY = 1000 * 60 * 60 * 24;
+
             for (Map.Entry<Date, Integer> entry : dateLogins.entrySet()) {
                 Date date = entry.getKey();
                 Integer value = entry.getValue();
-                dataPoints.add(new DataPoint(date, value));
 
-                Log.d(TAG, "Adding date " + date.toString() + ": " + value);
-                count++;
+                if(date.getTime() > cutoff.getTime().getTime()) {
+                    dataPoints.add(new DataPoint(date, value));
 
-                if(date.after(end)){
-                    end = date;
+                    Log.d(TAG, "Adding date " + date.toString() + ": " + value);
+                    count++;
+
+                    if (date.after(end)) {
+                        end = date;
+                    }
+
+                    if (date.before(start)) {
+                        start = date;
+                    }
+
+                    if (value > maxValue) {
+                        maxValue = value;
+                    }
                 }
-
-                if(date.before(start)){
-                    start = date;
-                }
-
-                if(value > maxValue){
-                    maxValue = value;
-                }
-
-
 
             }
 
+            graph.removeAllSeries();
+
             BarGraphSeries<DataPoint> series = new BarGraphSeries<>(dataPoints.toArray(new DataPoint[count]));
+            PointsGraphSeries<DataPoint> series1 = new PointsGraphSeries<>(dataPoints.toArray(new DataPoint[count]));
+
+            series1.setShape(PointsGraphSeries.Shape.POINT);
+            series1.setSize(2f);
+
             graph.addSeries(series);
 
-            graph.getViewport().setMinX(start.getTime());
+            graph.getViewport().setMinX(cutoff.getTime().getTime());
             graph.getViewport().setMaxX(end.getTime());
             graph.getViewport().setXAxisBoundsManual(true);
 
-            graph.getViewport().setMaxY(maxValue);
+
+            graph.getViewport().setMaxY(maxValue + 10);
             graph.getViewport().setMinY(0);
             graph.getViewport().setYAxisBoundsManual(true);
 
-            graph.getGridLabelRenderer().setHumanRounding(true);
+            /*DisplayMetrics displayMetrics = new DisplayMetrics();
+
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            graph.getViewport().setMaxXAxisSize(displayMetrics.widthPixels);*/
+
+
+            graph.getGridLabelRenderer().setHumanRounding(false);
 
             //graph.getGridLabelRenderer().setHorizontalAxisTitle("Date");
-            graph.getGridLabelRenderer().setVerticalAxisTitle("Logins");
+            //graph.getGridLabelRenderer().setVerticalAxisTitle("Logins");
 
             graph.getGridLabelRenderer().setHorizontalAxisTitleTextSize(30);
             graph.getGridLabelRenderer().setVerticalAxisTitleTextSize(30);
@@ -246,8 +302,7 @@ public class MainMenuActivity extends AppCompatActivity {
             //graph.getGridLabelRenderer().setNumHorizontalLabels(2);
 
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/YY");
-
+            /*SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/YY");
 
 
             StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
@@ -258,30 +313,27 @@ public class MainMenuActivity extends AppCompatActivity {
             graph.getGridLabelRenderer().setPadding(32);
             //graph.getGridLabelRenderer().setLabelVerticalWidth(40);
             graph.getGridLabelRenderer().setLabelHorizontalHeight(30);
+            graph.getGridLabelRenderer().setHumanRounding(false);*/
+
+
+
+            // set date label formatter
+            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
+            graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
             graph.getGridLabelRenderer().setHumanRounding(false);
+
+            //graph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+            graph.getGridLabelRenderer().setVerticalLabelsVisible(false);
 
             graph.getViewport().setScalableY(false);
             graph.getViewport().setScrollable(false);
             graph.getViewport().setScrollableY(false);
-
-
-            //graph.getViewport().setMaxXAxisSize(10);
-
-
+            graph.getViewport().setScalable(false);
 
         } catch (SQLException e){
             Log.d(TAG, e.toString());
         } catch (Exception e){
             Log.d(TAG, e.toString());
         }
-
-
-    }
-
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 }
