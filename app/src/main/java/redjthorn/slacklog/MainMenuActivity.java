@@ -115,7 +115,7 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(final View v) {
                 //WebHandler webHandler = new WebHandler();
-                WebHandler webHandler = new WebHandler(v.getContext());
+                /*WebHandler webHandler = new WebHandler(v.getContext());
                 webHandler.updateUsers(finalWorkspaceString);
 
                 webHandler.getMyRequestQueue().addRequestFinishedListener(new RequestQueue.RequestFinishedListener<Object>() {
@@ -128,9 +128,25 @@ public class MainMenuActivity extends AppCompatActivity {
 
 
                 /* Fetches pages 0 - 100 */
-                for(int i = 0; i <= 100; i++) {
+                /*for(int i = 0; i <= 100; i++) {
                     webHandler.updateLogs(finalWorkspaceString, i);
-                }
+                }*/
+
+
+                DBUpdater dbUpdater = new DBUpdater(finalWorkspaceString);
+                dbUpdater.updateUsers(v.getContext());
+                dbUpdater.updateLogs(v.getContext());
+                
+                graph = (GraphView) findViewById(R.id.all_user_graph);
+                updateGraph();
+
+
+                // gets logs back to certain date
+                //if date hit
+                    //proccess log
+                    //
+                //stop getting logs
+
 
 
             }
